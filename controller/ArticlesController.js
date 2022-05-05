@@ -40,7 +40,10 @@ class ArticlesController {
 
     static adminArticle = (req, res) => {
         Article.findAll({
-                include: [{ model: Category }]
+                include: [{ model: Category }],
+                order: [
+                    ['id', 'DESC']
+                ]
             })
             .then((articles) => {
                 res.render('admin/articles/index', {
@@ -95,6 +98,8 @@ class ArticlesController {
             })
             .then(() => {
                 res.redirect("/admin/articles");
+            }).catch(err => {
+                res.redirect("/admin/articles")
             })
     }
 

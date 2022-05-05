@@ -11,7 +11,8 @@ let routes = (app) => {
         Article.findAll({
             order: [
                 ['id', 'DESC']
-            ]
+            ],
+            limit: 4
         }).then(articles => {
             Category.findAll().then(categories => {
                 res.render('index', {
@@ -65,6 +66,45 @@ let routes = (app) => {
             }
         }).catch((err) => {
             res.redirect("/");
+        })
+    })
+
+    app.get('/article/page/:num', (req, res) => {
+        const pageNumber = parseInt(req.params.num);
+        let offset = 0;
+
+        if (isNaN(pageNumber) || pageNumber == 1) {
+            offset = 0;
+        } else {
+            offset = (pageNumber - 1) * 4;
+        }
+
+        Article.findAndCountAll({
+            limit: 4,
+            offset: offset,
+            order: [
+                ['id', 'DESC']
+            ],
+        }).then(articles => {
+            let next;
+            if (offset + 4 >= articles.count) {
+                next = false;
+            } else {
+                next = true;
+            }
+
+            let result = {
+                page: parseInt(pageNumber),
+                next: next,
+                articles: articles,
+            }
+
+            Category.findAll().then(categories => {
+                res.render('admin/articles/page', {
+                    result: result,
+                    categories: categories
+                })
+            })
         })
     })
 
