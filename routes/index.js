@@ -9,7 +9,7 @@ const Article = require('../models/Article.js');
 let routes = (app) => {
     app.get('/', (req, res) => {
         Article.findAll().then((articles) => {
-            res.render('index');
+            res.render('index', { articles: articles });
         })
     })
 
