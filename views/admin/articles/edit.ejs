@@ -12,7 +12,7 @@
                         <form method="POST" action="/admin/articles/update">
                             <input type="hidden" name="id" id="id" value="<%= article.id %>">
                             <input class="form-control mb-3" type="text" name="title" id="title" placeholder="Defina o título do artigo" value="<%= article.title %>">
-                            <textarea class="form-control" placeholder="Escreva o artigo aqui" name="body" id="article" value="<%= article.body%>"></textarea>
+                            <textarea class="form-control" placeholder="Escreva o artigo aqui" name="body" id="article"><%= article.body %></textarea>
                             <label class="mt-3">Categoria</label>
                             <select class="form-control" name="category" id="category">
                                 <% categories.forEach((category) => { if(article.categoryId==category.id){%>
@@ -31,11 +31,8 @@
             </div>
     </body>
     <%- include('../../partials/footer.ejs') %>
-
         <script src="/tinymce/tinymce.min.js"></script>
         <script>
-            let data = `<%= article.body %>`;
-            document.getElementById('article').innerHTML = data;
             tinymce.init({
                 selector: "#article",
                 language: "pt_BR",

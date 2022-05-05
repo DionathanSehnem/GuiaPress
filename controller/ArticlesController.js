@@ -18,15 +18,24 @@ class ArticlesController {
 
     static saveArticle = (req, res) => {
         let { title, body, category } = req.body;
+        console.log("title: " + title.trim() == '');
+        console.log("body: " + body.trim() == '');
+        console.log("category: " + category == undefined);
 
-        Article.create({
-            title: title,
-            slug: slugify(title).toLowerCase(),
-            body: body,
-            categoryId: Number(category)
-        }).then(() => {
+
+        if (title.trim() == '' || body.trim() == '' || category == undefined) {
             res.redirect("/admin/articles")
-        })
+        } else {
+            Article.create({
+                title: title,
+                slug: slugify(title).toLowerCase(),
+                body: body,
+                categoryId: Number(category)
+            }).then(() => {
+                res.redirect("/admin/articles");
+            })
+        }
+
     }
 
     static adminArticle = (req, res) => {
