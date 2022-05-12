@@ -1,12 +1,20 @@
 const express = require('express');
-const categories = require('./categoriesRoutes.js')
-const articles = require('./articlesRoutes.js')
+const categories = require('./categoriesRoutes.js');
+const articles = require('./articlesRoutes.js');
+const users = require('./usersRoutes.js');
 const Category = require('../models/Category.js');
 const Article = require('../models/Article.js');
-
-
+const adminAuth = require('../middlewares/adminAuth.js');
 
 let routes = (app) => {
+
+    app.use(
+        express.json(),
+        categories,
+        articles,
+        users
+    )
+
     app.get('/', (req, res) => {
         Article.findAll({
             order: [
@@ -20,6 +28,16 @@ let routes = (app) => {
                     categories: categories
                 });
             })
+        })
+    })
+
+    app.get("/admin", adminAuth, (req, res) => {
+        res.render("admin/index");
+    })
+
+    app.get("/leitura", (req, res) => {
+        res.json({
+            session: req.session,
         })
     })
 
@@ -107,12 +125,6 @@ let routes = (app) => {
             })
         })
     })
-
-    app.use(
-        express.json(),
-        categories,
-        articles
-    )
 }
 
 module.exports = routes;
